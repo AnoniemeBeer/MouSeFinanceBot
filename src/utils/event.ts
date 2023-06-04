@@ -10,10 +10,18 @@ export function event<T extends EventKeys>(id: T, exec: EventExec<T>): Event<T> 
 
 export function registerEvents(client: Client, events: Event<any>[]): void {
   for (const event of events) {
-    client.on(event.id, event.exec.bind(null, {
+    client.on(event.id, async (...args) => {
+      const props = {
         client,
-        log: (...args) => 
-        console.log(`[${event.id}]`, ... args)
-    }));
+        log: (...args: unknown[]) => 
+          console.log(`[${event.id}]`, ...args)
+      }
+
+      try {
+        await event.exec(props, ...args)
+      } catch (error) {
+        props.log('Unchaught Error:', error)
+      }
+    })
   }
 }
