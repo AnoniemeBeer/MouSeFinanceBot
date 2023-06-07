@@ -40,8 +40,46 @@ const  commands = [
     }, 
     {
         name: 'embed',
-        description: 'Sends an embed!'
+        description: 'Sends an embed!',
     }, 
+    {
+        name: 'leaderboard',
+        description: 'Krijgt het leaderboard van de server tezien',
+    },
+    {
+        name: 'aankoop',
+        description: 'Registreer een aankoop',
+        options: [
+            {
+                name: 'prijs',
+                description: "De prijs van de aankoop",
+                type: ApplicationCommandOptionType.Number,
+                required: true,
+            },
+            {
+                name: 'beschrijving',
+                description: "Wat was de aankoop",
+                type: ApplicationCommandOptionType.String,
+            },
+            {
+                name: 'persoon',
+                description: "De persoon die de aankoop heeft gedaan",
+                type: ApplicationCommandOptionType.User,
+            },
+        ],
+    },
+    {
+        name: 'aankopen',
+        description: 'Krijgt alle aankopen van een persoon te zien',
+        options: [
+            {
+                name: 'persoon',
+                description: "De persoon waarvan je de aankopen wilt zien",
+                type: ApplicationCommandOptionType.User,
+                required: true, 
+            },
+        ],
+    }
 ];
 
 const rest = new REST({ version: '10' }).setToken(dotenv.config().parsed.CLIENT_TOKEN);

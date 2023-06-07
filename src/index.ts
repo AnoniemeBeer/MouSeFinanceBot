@@ -31,7 +31,19 @@ client.on('ready', (c: { user: { tag: any; }; }) => {
 // An array of the statuses the bot can have
 let statuses = [
     {
-        name: 'The mouse',
+        name: 'Doe da ni',
+        type: ActivityType.Watching,
+    },
+    {
+        name: 'Tlag aan de setup',
+        type: ActivityType.Watching,
+    },
+    {
+        name: 'Tlag aan den auto',
+        type: ActivityType.Watching,
+    },
+    {
+        name: 'Tlag ni aan mij',
         type: ActivityType.Watching,
     },
 ];
@@ -66,6 +78,36 @@ client.on('interactionCreate', (interaction: any) => {
         // Reply the embed to sender
         interaction.reply({ embeds: [embed] });
     }
+
+    if (interaction.commandName === 'leaderboard') {
+        interaction.reply(
+            {
+                content: `Moet nog gemaakt worden`,
+                ephemeral: true,
+            }
+        );
+    }
+
+    if (interaction.commandName === 'aankoop') {
+        const price = interaction.options.getNumber('prijs');
+        const description = interaction.options.getString('beschrijving');
+        let user = interaction.options.getUser('persoon');
+        if (user == null){
+            user = interaction.member.user;
+        }
+
+        interaction.reply(`De aankoop van ${user} met een prijs van ${price} euro en een beschrijving van ${description} is geregistreerd!`);
+    }
+
+    if (interaction.commandName === 'aankopen') {
+        interaction.reply(
+            {
+                content: `Moet nog gemaakt worden`,
+                ephemeral: true,
+            }
+        );
+    }
+
 });
 
 // Login the client
