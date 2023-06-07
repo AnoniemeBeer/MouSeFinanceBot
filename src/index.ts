@@ -96,7 +96,7 @@ client.on('interactionCreate', (interaction: any) => {
             user = interaction.member.user;
         }
 
-        interaction.reply(`De aankoop van ${user} met een prijs van ${price} euro en een beschrijving van ${description} is geregistreerd!`);
+        interaction.reply(`De aankoop van ${user.id} met een prijs van ${price} euro en een beschrijving van ${description} is geregistreerd!`);
     }
 
     if (interaction.commandName === 'aankopen') {
