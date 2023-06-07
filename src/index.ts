@@ -35,7 +35,7 @@ let statuses = [
         type: ActivityType.Watching,
     },
     {
-        name: 'Tlag aan de setup',
+        name: 'Tlach aan de setup',
         type: ActivityType.Watching,
     },
     {
@@ -43,7 +43,7 @@ let statuses = [
         type: ActivityType.Watching,
     },
     {
-        name: 'Tlag ni aan mij',
+        name: 'Tlag ni aan mei',
         type: ActivityType.Watching,
     },
 ];
