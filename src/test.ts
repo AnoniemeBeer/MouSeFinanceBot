@@ -1,14 +1,14 @@
-const mariadb = require('mariadb');
-const dotenv = require('dotenv');
+import mariadb from 'mariadb';
+import dotenv from 'dotenv';
 
-const config = dotenv.config().parsed;
+const config: dotenv.DotenvParseOutput|undefined = dotenv.config().parsed;
 
 const pool = mariadb.createPool({
-  host: config.DATABASE_HOST,
-  port: config.DATABASE_PORT,
-  user: config.DATABASE_USER,
-  password: config.DATABASE_USER_PASSWORD,
-  database: config.DATABASE_SCHEMA,
+  host: config?config.DATABASE_HOST:"localhost",
+  port: parseInt(config?config.DATABASE_PORT:"3306"),
+  user: config?config.DATABASE_USER:"admin",
+  password: config?config.DATABASE_PASSWORD:"admin",
+  database: config?config.DATABASE_NAME:"mousefinance",
   connectionLimit: 5,
 });
 

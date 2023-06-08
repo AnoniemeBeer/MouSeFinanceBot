@@ -5,11 +5,11 @@ class DatabaseConnection {
 
     private static config = dotenv.config().parsed;
     private static pool = mariadb.createPool({
-        host: config.DATABASE_HOST,
-        port: config.DATABASE_PORT,
-        user: config.DATABASE_USER,
-        password: config.DATABASE_USER_PASSWORD,
-        database: config.DATABASE_SCHEMA,
+        host: this.config.DATABASE_HOST,
+        port: this.config.DATABASE_PORT,
+        user: this.config.DATABASE_USER,
+        password: this.config.DATABASE_USER_PASSWORD,
+        database: this.config.DATABASE_SCHEMA,
         connectionLimit: 5,
     });
     private static connection;
