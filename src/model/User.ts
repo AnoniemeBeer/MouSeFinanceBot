@@ -1,4 +1,4 @@
-class User{
+export class User{
     _id: number;
     _name: string;
     _discordId: string;

@@ -1,4 +1,4 @@
-class Purchase{
+export class Purchase{
     _id: number;
     _description: string;
     _price: number;

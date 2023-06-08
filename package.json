@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "nodemon --config nodemon.json src/index.ts",
     "build": "tsc",
+    "clean": "rm -rf dist",
     "start": "node .",
     "register": "node src/registerCommands.ts",
     "initdb": "node src/initializeDb.ts",
-    "test": "tsc ./src/test.ts && node ./src/test.js"
+    "test": "tsc && node ./dist/test.js"
   },
   "keywords": [],
   "author": "",
