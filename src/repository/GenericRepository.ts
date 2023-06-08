@@ -3,42 +3,100 @@ import DatabaseConnection from '../utils/databaseConnection';
 import iRepository from './iRepository';
 
 export default class GenericRepository<T> implements iRepository<T> {
-    private tableName: string;
-    private typeConstructor: new (...args: any[]) => T;
+    protected tableName: string;
+    protected typeConstructor: new (...args: any[]) => T;
+    protected connection: boolean = false;
   
     constructor(typeConstructor: new (...args: any[]) => T) {
         this.typeConstructor = typeConstructor;
         this.tableName = typeConstructor.name;
     }
-    
-    async getAll(): Promise<T[]> {
-        let query:string = `SELECT * FROM User;`;
 
+    async connect(): Promise<void> {
         await DatabaseConnection.connect();
-        let result = await DatabaseConnection.query("SELECT * FROM User;");
+        this.connection = true;
+    }
+    async disconnect(): Promise<void> {
         await DatabaseConnection.disconnect();
-         
-        return result;
+        this.connection = false;
     }
-    
-    async getById(id: number): Promise<T | null> {
-        // Implementation of retrieving an entity by ID from the database
-        return Promise.resolve(null);
-    }
-    
-    async add(item: T): Promise<T | null> {
-        // Implementation of creating a new entity in the database
-        return Promise.resolve(null);
-    }
-    
-    async update(id: number, item: T): Promise<T | null> {
-        // Implementation of updating an entity in the database
-        return Promise.resolve(null);
-    }
-    
-    async delete(id: number): Promise<boolean> {;
-        // Implementation of deleting an entity from the database
 
-        return Promise.resolve(false);
+    async getAll(): Promise<T[]> {
+        if (!this.connection)
+            await this.connect();
+            
+        let query:string = `SELECT * FROM ${this.tableName};`;
+
+        let result = await DatabaseConnection.query(query);
+        
+        let results: T[] = [];
+        for (const item of result){
+            results.push(new this.typeConstructor(item));
+        }
+
+        return results;
+    }
+    
+    async getById(id: number): Promise<T> {
+        if (!this.connection)
+            await this.connect();
+
+        let query:string = `SELECT * FROM ${this.tableName} WHERE id=${id}`;
+
+        let result = await DatabaseConnection.query(query);
+
+        return await new this.typeConstructor(result[0]);
+    }
+    
+    async add(item: any): Promise<T> {
+        if (!this.connection)
+            await this.connect();
+
+        let values:string = '(';
+        for (const value of Object.values(item)){
+            if (value == null)
+            {
+                values += `null,`;
+                continue;
+            }
+            values += `'${value}',`;
+        }
+
+        let query:string = `INSERT INTO ${this.tableName} VALUES ${values.substring(0, values.length - 1)+')'};`;
+        
+        await DatabaseConnection.query(query);
+        let result = await DatabaseConnection.query(`SELECT * FROM ${this.tableName} WHERE id=LAST_INSERT_ID();`);
+
+        return await new this.typeConstructor(result[0]);
+    }
+    
+    async update(id: number, item: any): Promise<T> {
+        if (!this.connection)
+            await this.connect();
+
+        let values:string = '';
+        for (const [key, value] of Object.entries(item)){
+            if (key != 'id')
+                values += `${key}='${value}',`;
+        }
+        let query: string = `UPDATE ${this.tableName} SET ${values.substring(0, values.length-1)} WHERE id=${id}`;
+
+        await DatabaseConnection.query(query);
+        let result = await DatabaseConnection.query(`SELECT * FROM ${this.tableName} WHERE id=${id};`);
+
+        return await new this.typeConstructor(result[0]);
+    }
+    
+    async delete(id: number): Promise<any> {
+        if (!this.connection)
+            await this.connect();
+
+        let query:string = `DELETE FROM ${this.tableName} WHERE id=${id}`;
+
+        let result = await DatabaseConnection.query(query);
+
+        if (result.affectedRows == 0)
+            return false;
+        return true;
     }
 }

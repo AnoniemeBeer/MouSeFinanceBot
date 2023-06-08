@@ -20,6 +20,7 @@ export default class DatabaseConnection{
             this.connection = await this.pool.getConnection();
         } catch (error) {
             console.log(error);
+            return null;
         }
     };
 
@@ -29,6 +30,7 @@ export default class DatabaseConnection{
             await this.pool.end();
         } catch (error) {
             console.log(error);
+            return null;
         }
     };
     
@@ -38,6 +40,7 @@ export default class DatabaseConnection{
             return results;            
         } catch (error) {
             console.log(error);
+            return null;
         }
     };
 }

@@ -1,7 +1,7 @@
 import { EmbedBuilder } from 'discord.js';
 
 export default {
-    name: 'embed',
+    name: 'info',
     description: 'Sends an embed!',
     devOnly: true,
     testOnly: true,

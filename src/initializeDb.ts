@@ -13,7 +13,7 @@ const pool = mariadb.createPool({
 });
 
 const createUserTable = "CREATE TABLE `User` (`id` int NOT NULL AUTO_INCREMENT, `name` varchar(255) NOT NULL, `discordId` varchar(150) NOT NULL, PRIMARY KEY (`id`));";
-const createPurchasesTable = "CREATE TABLE `Purchases` (`id` int NOT NULL AUTO_INCREMENT, `description` varchar(500) NOT NULL , `price` double NOT NULL, `userId` int NOT NULL, PRIMARY KEY (`id`), KEY `FK_1` (`userId`), CONSTRAINT `FK_1` FOREIGN KEY `FK_1` (`userId`) REFERENCES `User` (`id`));";
+const createPurchasesTable = "CREATE TABLE `Purchase` (`id` int NOT NULL AUTO_INCREMENT, `description` varchar(500) NOT NULL , `price` double NOT NULL, `userId` int NOT NULL, PRIMARY KEY (`id`), KEY `FK_1` (`userId`), CONSTRAINT `FK_1` FOREIGN KEY `FK_1` (`userId`) REFERENCES `User` (`id`));";
 
 (async () => {
   let conn;
