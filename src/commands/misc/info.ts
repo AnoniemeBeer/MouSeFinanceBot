@@ -15,6 +15,13 @@ export default {
         embed.setTitle('This is an embed!');
         embed.setDescription('This is the description of the embed!');
         embed.setColor('#FF0000');
+        embed.setFooter({ text: 'Shame on you all'});
+        const userNames: string = "\`1:\` anoniemebeer\n\`2:\` pippeloo";
+        const totals: string = "€50\n€10";
+        embed.addFields(
+            { name: 'Top 10', value: userNames, inline: true},
+            { name: 'Total', value: totals, inline: true }
+        );
 
         // Reply the embed to sender
         interaction.reply({ embeds: [embed] });

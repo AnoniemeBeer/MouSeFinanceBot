@@ -1,5 +1,5 @@
 import { REST, Routes, ApplicationCommandOptionType } from 'discord.js';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 import getLocalCommands from '../../utils/getLocalCommands';
 import getApplicationCommands from '../../utils/getApplicationCommands';
 import areCommandsDifferent from '../../utils/areCommandsDifferent';

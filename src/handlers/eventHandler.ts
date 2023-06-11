@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import getAllFiles from '../utils/getAllFiles';
 
 export default (client: any) => {
