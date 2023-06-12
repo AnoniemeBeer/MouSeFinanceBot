@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js';
-import { User, Purchase } from '../../model';
-import { PurchaseRepository, UserRepository } from '../../repository';
+import { User, Purchase } from '../../entity';
+import { AppDataSource } from '../../data-source';
 
 export default {
     name: 'aankoop',
@@ -28,53 +28,48 @@ export default {
     // deleted: Boolean,
     
     callback: async (client:any , interaction:any) => {
-        // const purchaseRepository = new PurchaseRepository(Purchase);
-        // const userRepository = new UserRepository(User);
-        // const price = interaction.options.getNumber('prijs');
-        // const description = interaction.options.getString('beschrijving');
-        // let user = interaction.options.getUser('persoon');
+        const purchaseRepository = AppDataSource.getRepository(Purchase);
+        const userRepository = AppDataSource.getRepository(User);
+        const price = interaction.options.getNumber('prijs');
+        const description = interaction.options.getString('beschrijving');
+        let user = interaction.options.getUser('persoon');
 
-        // await userRepository.connect();
-
-        // if (user == null){
-        //     user = interaction.user;
-        // }
+        if (user == null){
+            user = interaction.user;
+        }
         
-        // let userResult: User|null = await userRepository.getByDiscordId(user.id);
+        let userResult: User|null = await userRepository.findOne({where: {discordId: user.id}})
 
-        // // Check if the user exists, if not, create it
-        // // Otherwise, check if the user's name has changed
-        // if (userResult == null){
-        //     const newUser = new User({
-        //         id: null,
-        //         name: user.username,
-        //         discordId: user.id,
-        //     });
+        // Check if the user exists, if not, create it
+        // Otherwise, check if the user's name has changed
+        if (userResult == null){
+            const newUser = new User();
+            newUser.discordId = user.id;
+            newUser.name = user.username;
 
-        //     userResult = await userRepository.add(newUser);
-        // } else {
-        //     // First check if the user's name has changed
-        //     if (userResult.name != user.username){
-        //         userResult.name = user.username;
-        //         userResult = await userRepository.update(userResult.id?userResult.id:1, userResult);
-        //     }
-        // }
+            await userRepository.save(newUser);
 
-        // const purchase: Purchase = new Purchase({
-        //     id: null,
-        //     description: description,
-        //     price: price,
-        //     userId: userResult.id,
-        // });
+        } else {
+            // First check if the user's name has changed
+            if (userResult.name != user.username){
+                userResult.name = user.username;
+                userResult.discordId = user.id;
+                await userRepository.save(userResult);
+            }
+        }
 
-        // const purchaseResult = await purchaseRepository.add(purchase);
+        const purchase: Purchase = new Purchase();
+        if (userResult){
+            purchase.description = description;
+            purchase.price = price;
+            purchase.user = userResult;
+        }
 
-        // await userRepository.disconnect();
+        const purchaseResult = await purchaseRepository.save(purchase);
 
         interaction.reply(
             {
-                // content: `Aankoop van \`${description}\` geregistreerd`,
-                content: 'Not yet implemented',
+                content: `Aankoop van \`${description}\` geregistreerd`,
             }
         );
     }

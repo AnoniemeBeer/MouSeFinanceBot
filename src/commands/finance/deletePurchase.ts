@@ -1,4 +1,6 @@
 import { ApplicationCommandOptionType } from 'discord.js';
+import { User, Purchase } from '../../entity';
+import { AppDataSource } from '../../data-source';
 
 export default {
     name: 'verwijder-aankoop',
@@ -15,7 +17,10 @@ export default {
     ],
     // deleted: Boolean,
     
-    callback: (client:any , interaction:any) => {
+    callback: async (client:any , interaction:any) => {
+        const purchaseRepository = AppDataSource.getRepository(Purchase);
+        const userRepository = AppDataSource.getRepository(User);
+        const purchaseId = interaction.options.getNumber('purchase_id');
         interaction.reply(
             {
                 content: `Moet nog geimplementeerd worden`,

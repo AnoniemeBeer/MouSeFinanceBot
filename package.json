@@ -8,9 +8,6 @@
       "build": "tsc",
       "clean": "rm -rf dist",
       "start": "ts-node src/index.ts",
-      "register": "node src/registerCommands.ts",
-      "initdb": "node src/initializeDb.ts",
-      "test": "tsc && node ./dist/test.js",
       "typeorm": "typeorm-ts-node-commonjs"
    },
    "keywords": [],
