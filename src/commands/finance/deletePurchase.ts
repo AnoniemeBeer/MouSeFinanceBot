@@ -19,13 +19,17 @@ export default {
     
     callback: async (client:any , interaction:any) => {
         const purchaseRepository = AppDataSource.getRepository(Purchase);
-        const userRepository = AppDataSource.getRepository(User);
         const purchaseId = interaction.options.getNumber('purchase_id');
-        interaction.reply(
-            {
-                content: `Moet nog geimplementeerd worden`,
-                ephemeral: true,
-            }
-        );
+
+        const purchase = await purchaseRepository.findOne({where: {id: purchaseId}, relations: ['user']});
+
+        if (purchase == null){
+            interaction.reply({ content: 'Deze aankoop bestaat niet', ephemeral: true });
+            return;
+        }
+
+        await purchaseRepository.delete(purchaseId);
+
+        interaction.reply({ content: `De aankoop \`${purchase.description}\`(€${purchase.price}) van \`${purchase.user.name}\` is verwijderd.`});
     }
 }
