@@ -6,8 +6,8 @@ import { AppDataSource } from '../../data-source';
 export default {
     name: 'leaderboard',
     description: 'Krijg het leaderboard van de server tezien',
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     // options: Object[],
     // deleted: Boolean,
     

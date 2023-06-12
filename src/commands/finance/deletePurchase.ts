@@ -5,8 +5,8 @@ import { AppDataSource } from '../../data-source';
 export default {
     name: 'verwijder-aankoop',
     description: 'Verwijder een aankoop',
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     options: [
         {
             name: 'purchase_id',

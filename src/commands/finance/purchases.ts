@@ -5,8 +5,8 @@ import { AppDataSource } from '../../data-source';
 export default {
     name: 'aankopen',
     description: 'Krijg alle aankopen van een persoon te zien',
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     options: [
         {
             name: 'persoon',

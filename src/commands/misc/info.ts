@@ -3,8 +3,8 @@ import { EmbedBuilder } from 'discord.js';
 export default {
     name: 'info',
     description: 'Krijg alle commands te zien',
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     // options: Object[],
     // deleted: Boolean,
 
