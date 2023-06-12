@@ -13,6 +13,7 @@ export class User extends BaseEntity {
     @Column()
     discordId!: string
 
-    @OneToMany(() => )
+    @OneToMany(() => Purchase, (purchase) => purchase.user, { cascade: true })
+    purchases!: Purchase[];
 
 }

@@ -39,19 +39,25 @@ async function test() {
     .catch(error => console.log(error));
 
     const userRepository = AppDataSource.getRepository(User);
+    const purchaseRepository = AppDataSource.getRepository(Purchase);
 
-    // const user = new User();
+    // const allUsers = await userRepository.findOneBy({ id: 1 });
 
-    // user.name = "Test";
-    // user.discordId = "1234567890";
+    // const purchase: Purchase = new Purchase();
 
-    // await userRepository.save(user);
+    // if (allUsers){
+    //     purchase.description = "Test purchase";
+    //     purchase.price = 100;
+    //     purchase.user = allUsers;
+    // }
 
-    // console.log(user);
+    // await purchaseRepository.save(purchase);
 
-    // const allUsers = await userRepository.find();
+    const allPurchases = await purchaseRepository.find({
+        relations: ["user"]
+    });
 
-    // console.log(allUsers);
+    console.log(allPurchases);
 }
 
 test();
