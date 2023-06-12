@@ -26,7 +26,7 @@ export default {
         if (person == null){
             user = await userRepository.findOne({where: {discordId: interaction.user.id}, relations: ['purchases']});
         }else{
-            user = await userRepository.findOne({where: {discordId: person.discordId}, relations: ['purchases']});
+            user = await userRepository.findOne({where: {discordId: `${person.id}`}, relations: ['purchases']});
         }
 
         if (user == null || user.purchases.length == 0){
@@ -46,7 +46,7 @@ export default {
 
         const embed = new EmbedBuilder();
         embed.setTitle('Aankopen');
-        embed.setDescription('Dit is het leaderboard van de server');
+        embed.setDescription(`Dit zijn de aankopen van ${user.name}`);
         embed.setColor('#53fc0b');
 
         embed.addFields(

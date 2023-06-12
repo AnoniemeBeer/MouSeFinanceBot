@@ -1,7 +1,7 @@
 import { AppDataSource } from "./data-source"
 import "reflect-metadata";
 
-import { Client, IntentsBitField } from 'discord.js';
+import { Client, IntentsBitField, ActivityType, ActivityOptions } from 'discord.js';
 import * as dotenv from 'dotenv';
 
 import eventHandler from './handlers/eventHandler';
@@ -28,11 +28,10 @@ const test = async() => {
 
 test();
 
-
 eventHandler(client);
 
 // Login the client
 client.login(
     config.CLIENT_TOKEN
-);
-
+    );
+    
