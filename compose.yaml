@@ -10,14 +10,17 @@ services:
       MYSQL_USER: ${DATABASE_USER}
       MYSQL_PASSWORD: ${DATABASE_USER_PASSWORD}
     volumes:
-      - data:/var/lib/mysql
+      - ./data:/var/lib/mysql
     ports:
       - "${DATABASE_FORWARD:-3306}:3306"
     networks:
       - backend
     restart: always
+
   web:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.node
     ports:
       - 8080:8080
     depends_on:
