@@ -1,5 +1,4 @@
 import { AppDataSource } from "./data-source"
-import "reflect-metadata";
 
 import { Client, IntentsBitField, ActivityType, ActivityOptions } from 'discord.js';
 import * as dotenv from 'dotenv';
