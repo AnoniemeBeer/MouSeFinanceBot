@@ -32,8 +32,7 @@ export default {
         const purchaseRepository = AppDataSource.getRepository(Purchase);
         const userRepository = AppDataSource.getRepository(User);
         const price = interaction.options.getNumber('prijs');
-        let description = "null";
-        description = interaction.options.getString('beschrijving');
+        const description = interaction.options.getString('beschrijving');
         let user = interaction.options.getUser('persoon');
 
         if (user == null){
@@ -51,6 +50,8 @@ export default {
 
             await userRepository.save(newUser);
 
+            userResult = await userRepository.findOne({where: {discordId: user.id}})
+
         } else {
             // First check if the user's name has changed
             if (userResult.name != user.username){
@@ -66,12 +67,14 @@ export default {
             purchase.price = price;
             purchase.user = userResult;
             const purchaseResult = await purchaseRepository.save(purchase);
+            interaction.reply(
+                {
+                    content: `Aankoop van \`${description}\` geregistreerd voor \`${userResult.name}\``,
+                }
+            );
+            return;
         }
 
-        interaction.reply(
-            {
-                content: `Aankoop van \`${description}\` geregistreerd`,
-            }
-        );
+        interaction.reply({ content: 'Er ging iets mis, aankoop niet geregistreerd', ephemeral: true });
     }
 }

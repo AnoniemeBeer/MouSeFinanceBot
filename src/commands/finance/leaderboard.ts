@@ -16,6 +16,11 @@ export default {
         const userRepository = await AppDataSource.getRepository(User);
         
         let users: User[] = (await userRepository.find({ relations: ['purchases']}));
+
+        if (users.length == 0){
+            interaction.reply({ content: 'Er zijn nog geen aankopen geregistreerd', ephemeral: true });
+            return;
+        }
         
         let leaderboard: any[][] = [];
         
