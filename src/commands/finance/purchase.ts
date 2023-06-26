@@ -18,6 +18,7 @@ export default {
             name: 'beschrijving',
             description: "Wat was de aankoop",
             type: ApplicationCommandOptionType.String,
+            required: true,
         },
         {
             name: 'persoon',
@@ -31,7 +32,8 @@ export default {
         const purchaseRepository = AppDataSource.getRepository(Purchase);
         const userRepository = AppDataSource.getRepository(User);
         const price = interaction.options.getNumber('prijs');
-        const description = interaction.options.getString('beschrijving');
+        let description = "null";
+        description = interaction.options.getString('beschrijving');
         let user = interaction.options.getUser('persoon');
 
         if (user == null){
@@ -58,14 +60,13 @@ export default {
             }
         }
 
-        const purchase: Purchase = new Purchase();
         if (userResult){
+            const purchase: Purchase = new Purchase();
             purchase.description = description;
             purchase.price = price;
             purchase.user = userResult;
+            const purchaseResult = await purchaseRepository.save(purchase);
         }
-
-        const purchaseResult = await purchaseRepository.save(purchase);
 
         interaction.reply(
             {

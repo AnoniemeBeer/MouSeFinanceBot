@@ -7,7 +7,8 @@
       "dev": "nodemon --config nodemon.json src/index.ts",
       "build": "tsc",
       "clean": "rm -rf dist",
-      "start": "node dist/index.js"
+      "start": "node dist/index.js",
+      "dockerbuild": "docker build -f Dockerfile.node -t mousefinancebot-web ."
    },
    "keywords": [],
    "author": "",
