@@ -6,6 +6,5 @@ tmp/
 temp/
 
 .env
-!*.example.env
 dist/
 data
