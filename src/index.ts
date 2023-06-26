@@ -17,20 +17,32 @@ const client = new Client({
     ]
 });
 
-const test = async() => {
-    await AppDataSource.initialize()
-    .then(async () => {
-        console.log("Database connection established");
-    })
-    .catch(error => console.log(error));
+const connectDb = async() => {
+    let flag = true;
+    let count = 0;
+    while(flag) {
+        count += 1;
+        console.log(`Attempt ${count} to connect to database`);
+        await AppDataSource.initialize()
+        .then(async () => {
+            console.log("Database connection established");
+            flag = false;
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+
+        // Wait 2 seconds before trying again
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    }
 }
 
-test();
+connectDb();
 
 eventHandler(client);
 
 // Login the client
 client.login(
     config.CLIENT_TOKEN
-    );
+);
     
