@@ -69,7 +69,7 @@ export default {
             const purchaseResult = await purchaseRepository.save(purchase);
             interaction.reply(
                 {
-                    content: `Aankoop van \`${description}\` geregistreerd voor \`${userResult.name}\``,
+                    content: `Aankoop van \`${description}\` geregistreerd voor \`${userResult.name}\`, prijs: \`€${price}\``,
                 }
             );
             return;
