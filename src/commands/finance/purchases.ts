@@ -37,8 +37,10 @@ export default {
         let ids: string = ``;
         let beschrijvingen: string = ``;
         let prices: string = ``;
+        
+        let userPurchases: Purchase[] = user.purchases.slice(10);
 
-        for (const item of user.purchases) {
+        for (const item of userPurchases) {
             ids += `\`${item.id}\`\n`;
             beschrijvingen += `${item.description}\n`;
             prices += `${item.price}\n`;
@@ -46,7 +48,7 @@ export default {
 
         const embed = new EmbedBuilder();
         embed.setTitle('Aankopen');
-        embed.setDescription(`Dit zijn de aankopen van ${user.name}`);
+        embed.setDescription(`Dit zijn de laatste 10 aankopen van ${user.name}`);
         embed.setColor('#53fc0b');
 
         embed.addFields(
