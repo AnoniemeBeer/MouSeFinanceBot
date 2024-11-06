@@ -37,8 +37,13 @@ export default {
         let ids: string = ``;
         let beschrijvingen: string = ``;
         let prices: string = ``;
+        let total: number = 0;
         
         let userPurchases: Purchase[] = user.purchases.slice(0, 10);
+
+        for (const item of user.purchases) {
+            total += item.price;
+        }
 
         for (const item of userPurchases) {
             ids += `\`${item.id}\`\n`;
@@ -48,11 +53,10 @@ export default {
 
         const embed = new EmbedBuilder();
         embed.setTitle('Aankopen');
-        embed.setDescription(`Dit zijn de laatste 10 aankopen van ${user.name}`);
+        embed.setDescription(`Dit zijn de laatste 10 aankopen van ${user.name} \nTotaal uitgegeven: ${total}`);
         embed.setColor('#53fc0b');
 
         embed.addFields(
-            { name: 'Id', value: ids, inline: true },
             { name: 'Beschrijving', value: beschrijvingen, inline: true },
             { name: 'Prijs', value: prices, inline: true },
         )
