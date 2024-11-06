@@ -1,9 +1,10 @@
-version: '3.8'
+version: "3.8"
 volumes:
   data:
 services:
   db:
     image: mariadb
+    container_name: mousefinancebot-db
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_SCHEMA}

@@ -38,7 +38,7 @@ export default {
         let beschrijvingen: string = ``;
         let prices: string = ``;
         
-        let userPurchases: Purchase[] = user.purchases.slice(10);
+        let userPurchases: Purchase[] = user.purchases.slice(0, 10);
 
         for (const item of userPurchases) {
             ids += `\`${item.id}\`\n`;
