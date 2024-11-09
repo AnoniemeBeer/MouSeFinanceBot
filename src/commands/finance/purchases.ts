@@ -2,7 +2,7 @@ import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
 import { User, Purchase } from '../../entity';
 import { AppDataSource } from '../../data-source';
 import pagination from '../../utils/pagination';
-import chunkArray from '../../utils/ChunkArray';
+import chunkArray from '../../utils/chunkArray';
 
 export default {
     name: 'aankopen',
