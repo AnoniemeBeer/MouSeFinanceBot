@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } from "discord.js";
 
-export default async (interaction:any, pages:any, time = 30 * 1000) => {
+export default async (interaction:any, pages:any, time = 60 * 1000) => {
     if (!interaction || !pages) throw new Error('[Paginatio] No valid args');
     
     await interaction.deferReply();
@@ -51,7 +51,6 @@ export default async (interaction:any, pages:any, time = 30 * 1000) => {
         if (button.user.id !== interaction.user.id) {
             return button.reply({ content: 'You cannot interact with this menu', ephemeral: true });
         }
-        console.log(button.customId, currentPage);
         
         await button.deferUpdate();
         
@@ -74,8 +73,6 @@ export default async (interaction:any, pages:any, time = 30 * 1000) => {
             currentPage = pages.length - 1;
             pageCount.setLabel(`Page ${currentPage + 1}/${pages.length}`);
         }
-
-        console.log(currentPage);
         
         if (currentPage === 0) {
             first.setDisabled(true);
