@@ -70,7 +70,7 @@ export default {
 
       // Loop through all the purchases and add them to the fields
       for (const item of userPurchases) {
-        ids += `\`${item.id}\`\n`;
+        ids += `${item.id}\n`;
         beschrijvingen += `${item.description}\n`;
         prices += `€${item.price}\n`;
       }
@@ -83,6 +83,7 @@ export default {
       );
       embed.setColor("#53fc0b");
       embed.addFields(
+        { name: "ID", value: ids, inline: true },
         { name: "Beschrijving", value: beschrijvingen, inline: true },
         { name: "Prijs", value: prices, inline: true }
       );
