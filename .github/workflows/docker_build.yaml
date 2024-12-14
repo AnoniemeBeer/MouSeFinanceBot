@@ -19,10 +19,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
       - name: Build and push to dockerhub
         uses: docker/build-push-action@v5
         with:
           file: Dockerfile.node
           push: true
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_latest, ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache,mode=max
+          tags:
+            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_latest,
+            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_${{ github.sha }}
