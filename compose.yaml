@@ -18,7 +18,7 @@ services:
     restart: always
 
   web:
-    image: anoniemebeer/mousefinancebot:main_latest
+    image: anoniemebeer/mousefinancebot:latest
     environment:
       CLIENT_TOKEN: ${CLIENT_TOKEN}
       GUILD_ID: ${GUILD_ID}
