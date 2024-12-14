@@ -27,7 +27,6 @@ services:
       DATABASE_SCHEMA: ${DATABASE_SCHEMA}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_USER_PASSWORD: ${DATABASE_USER_PASSWORD}
-      TEST: world
     ports:
       - 8080:8080
     depends_on:
