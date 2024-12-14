@@ -29,7 +29,7 @@ jobs:
         with:
           file: Dockerfile.node
           push: true
-          platforms: linux/amd64,linux/arm64
-          tags: >
-            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_latest,
-            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
+          cache-to: type=registry,mode=max,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_latest, ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_${{ github.sha }}
