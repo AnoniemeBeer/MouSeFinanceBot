@@ -1,65 +1,70 @@
-import * as dotenv from 'dotenv';
-import getLocalCommands from '../../utils/getLocalCommands';
+import dotenv from "dotenv";
+import getLocalCommands from "../../utils/getLocalCommands";
 
-export default async (client:any , interaction:any ) => {
-    const config: dotenv.DotenvParseOutput = dotenv.config().parsed || {};
-    const devs = config.DEVS.split(',');
-    const testGuild = config.GUILD_ID;
+dotenv.config();
 
-    if (!interaction.isChatInputCommand()) return;
+export default async (client: any, interaction: any) => {
+  const devs = process.env.DEVS?.split(",");
+  const testGuild = process.env.GUILD_ID;
 
-    const localCommands = getLocalCommands();
+  if (!interaction.isChatInputCommand()) return;
 
-    try {
-        const commandObject = localCommands.find((cmd:any) => cmd.name === interaction.commandName);
+  const localCommands = getLocalCommands();
 
-        if (!commandObject) return;
+  try {
+    const commandObject = localCommands.find(
+      (cmd: any) => cmd.name === interaction.commandName
+    );
 
-        if(commandObject.devOnly){
-            if(!devs.includes(interaction.member.id)){
-                interaction.reply({
-                    content: "Alleen developers mogel dit commando gebruiken.",
-                    ephemeral: true,
-                });
-                return;
-            }
-        }
-        if(commandObject.testOnly){
-            if(!(interaction.guild.id === testGuild)){
-                interaction.reply({
-                    content: "Dit commando is nog niet beschikbaar op deze server.",
-                    ephemeral: true,
-                });
-                return;
-            }
-        }
-        if (commandObject.permissionsRequired?.length) {
-            for (const permission of commandObject.permissionsRequired) {
-                if(!interaction.member.permissions.has(permission)){
-                    interaction.reply({
-                        content: "Je hebt niet de juiste permissies om dit commando te gebruiken.",
-                        ephemeral: true,
-                    });
-                    break;
-                }
-            }
-        }
-        if(commandObject.botPermissions?.length){
-            for (const permission of commandObject.botPermissions) {
-                const bot = interaction.guild.members.me;
+    if (!commandObject) return;
 
-                if(!bot.permissions.has(permission)){
-                    interaction.reply({
-                        content: "Ik heb niet de juiste permissies om dit commando te gebruiken.",
-                        ephemeral: true,
-                    });
-                    break;
-                }
-            }
-        }
-
-        await commandObject.callback(client, interaction);
-    } catch (error) {
-        console.log(`There was an error running this command: ${error}`);
+    if (commandObject.devOnly) {
+      if (!devs?.includes(interaction.member.id)) {
+        interaction.reply({
+          content: "Alleen developers mogel dit commando gebruiken.",
+          ephemeral: true,
+        });
+        return;
+      }
     }
+    if (commandObject.testOnly) {
+      if (!(interaction.guild.id === testGuild)) {
+        interaction.reply({
+          content: "Dit commando is nog niet beschikbaar op deze server.",
+          ephemeral: true,
+        });
+        return;
+      }
+    }
+    if (commandObject.permissionsRequired?.length) {
+      for (const permission of commandObject.permissionsRequired) {
+        if (!interaction.member.permissions.has(permission)) {
+          interaction.reply({
+            content:
+              "Je hebt niet de juiste permissies om dit commando te gebruiken.",
+            ephemeral: true,
+          });
+          break;
+        }
+      }
+    }
+    if (commandObject.botPermissions?.length) {
+      for (const permission of commandObject.botPermissions) {
+        const bot = interaction.guild.members.me;
+
+        if (!bot.permissions.has(permission)) {
+          interaction.reply({
+            content:
+              "Ik heb niet de juiste permissies om dit commando te gebruiken.",
+            ephemeral: true,
+          });
+          break;
+        }
+      }
+    }
+
+    await commandObject.callback(client, interaction);
+  } catch (error) {
+    console.log(`There was an error running this command: ${error}`);
+  }
 };

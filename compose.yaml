@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 volumes:
   data:
 services:
@@ -18,9 +18,16 @@ services:
     restart: always
 
   web:
-    build: 
-      context: .
-      dockerfile: Dockerfile.node
+    image: mousefinancebot
+    environment:
+      CLIENT_TOKEN: ${CLIENT_TOKEN}
+      GUILD_ID: ${GUILD_ID}
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_SCHEMA: ${DATABASE_SCHEMA}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_USER_PASSWORD: ${DATABASE_USER_PASSWORD}
+      TEST: world
     ports:
       - 8080:8080
     depends_on:
