@@ -1,29 +1,29 @@
 {
-   "name": "mousefinancebot",
-   "version": "1.0.0",
-   "description": "",
-   "main": "dist/index.js",
-   "scripts": {
-      "dev": "nodemon --config nodemon.json src/index.ts",
-      "build": "tsc",
-      "clean": "rm -rf dist",
-      "start": "node dist/index.js",
-      "dockerbuild": "docker build -f Dockerfile.node -t mousefinancebot-web ."
-   },
-   "keywords": [],
-   "author": "",
-   "license": "ISC",
-   "devDependencies": {
-      "@types/node": "16.11.10",
-      "nodemon": "^3.1.7",
-      "ts-node": "10.7.0",
-      "typescript": "4.5.2"
-   },
-   "dependencies": {
-      "discord.js": "14.11.0",
-      "dotenv": "16.1.3",
-      "mysql": "2.18.1",
-      "pg": "8.5.1",
-      "typeorm": "0.3.16"
-   }
+  "name": "mousefinancebot",
+  "version": "1.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "nodemon --config nodemon.json src/index.ts",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "start": "node dist/index.js",
+    "dockerbuild": "docker build -f Dockerfile.node -t mousefinancebot-web ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "16.11.10",
+    "nodemon": "^3.1.7",
+    "ts-node": "10.7.0",
+    "typescript": "4.5.2"
+  },
+  "dependencies": {
+    "discord.js": "14.11.0",
+    "dotenv": "16.1.3",
+    "mysql": "2.18.1",
+    "pg": "8.5.1",
+    "typeorm": "0.3.16"
+  }
 }

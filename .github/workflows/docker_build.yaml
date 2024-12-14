@@ -24,6 +24,10 @@ jobs:
         with:
           install: true
 
+      - name: Extract version from package.json
+        id: get_version
+        run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
       - name: Build and push to dockerhub
         uses: docker/build-push-action@v5
         with:
@@ -32,6 +36,5 @@ jobs:
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache,mode=max
-          tags:
-            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_latest,
-            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ github.ref_name }}_${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:latest,
+            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ env.VERSION }}
