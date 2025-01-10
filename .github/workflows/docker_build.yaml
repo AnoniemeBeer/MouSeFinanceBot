@@ -1,40 +1,53 @@
 name: Docker image CI
 
 on:
-  push:
-    branches:
-      - "main"
+    push:
+        branches:
+            - "main"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
+        steps:
+            - name: Check out the repo
+              uses: actions/checkout@v4
 
-      - name: Login to dockerhub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: Login to dockerhub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          install: true
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+              with:
+                  install: true
 
-      - name: Extract version from package.json
-        id: get_version
-        run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push to dockerhub
-        uses: docker/build-push-action@v5
-        with:
-          file: Dockerfile.node
-          push: true
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache,mode=max
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:latest,
-            ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ env.VERSION }}
+            - name: Extract version from package.json
+              id: get_version
+              run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
+            - name: Convert repository owner to lowercase
+              id: lowercase_owner
+              run: echo "LOWERCASE_OWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+            - name: Build and push to dockerhub
+              uses: docker/build-push-action@v5
+              with:
+                  file: Dockerfile.node
+                  push: true
+                  platforms: linux/amd64
+                  cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
+                  cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache,mode=max
+                  tags: |
+                      ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:latest,
+                      ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ env.VERSION }}
+                      ghcr.io/${{ env.LOWERCASE_OWNER }}/mousefinancebot:${{ env.VERSION }}
