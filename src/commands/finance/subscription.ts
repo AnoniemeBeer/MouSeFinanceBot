@@ -1,17 +1,25 @@
-import { ApplicationCommandOptionType } from "discord.js";
-import { User, Purchase } from "../../entity";
+import { Application, ApplicationCommandOptionType } from "discord.js";
+import { User, Purchase, Subscription } from "../../entity";
 import { AppDataSource } from "../../data-source";
 
 export default {
-  name: "aankoop",
-  description: "Registreer een aankoop",
+  name: "abbonement",
+  description: "Registreer een abbonement",
   devOnly: false,
   testOnly: false,
   options: [
     {
       name: "prijs",
-      description: "De prijs van de aankoop",
+      description: "De prijs van het abbonement",
       type: ApplicationCommandOptionType.Number,
+      required: true,
+    },
+    {
+      name: "herhaling",
+      description:
+        "Hoe vaak herhaalt het abonnement? (dagelijks, wekelijks, maandelijks, jaarlijks)",
+      options: ["dagelijks", "wekelijks", "maandelijks", "jaarlijks"],
+      type: ApplicationCommandOptionType.String,
       required: true,
     },
     {
@@ -21,19 +29,29 @@ export default {
       required: true,
     },
     {
+      name: "start-datum",
+      description: "De start datum van het abonnement (YYYY-MM-DD)",
+      type: ApplicationCommandOptionType.String,
+    },
+    {
       name: "persoon",
       description: "De persoon die de aankoop heeft gedaan",
       type: ApplicationCommandOptionType.User,
     },
   ],
-  // deleted: Boolean,
 
   callback: async (client: any, interaction: any) => {
     const purchaseRepository = AppDataSource.getRepository(Purchase);
     const userRepository = AppDataSource.getRepository(User);
+    const subscriptionRepository = AppDataSource.getRepository(Subscription);
+
+    let user = interaction.options.getUser("persoon");
     const price = interaction.options.getNumber("prijs");
     const description = interaction.options.getString("beschrijving");
-    let user = interaction.options.getUser("persoon");
+    const recurrence = interaction.options.getString("herhaling");
+    const startDate = interaction.options.getString("start-datum")
+      ? new Date(interaction.options.getString("start-datum"))
+      : new Date();
 
     if (user == null) {
       user = interaction.user;
@@ -64,17 +82,27 @@ export default {
       }
     }
 
-    if (userResult) {
-      const purchase: Purchase = new Purchase();
-      purchase.description = description;
-      purchase.price = price;
-      purchase.user = userResult;
-      const purchaseResult = await purchaseRepository.save(purchase);
-      interaction.reply({
-        content: `Aankoop van \`${description}\` geregistreerd voor \`${userResult.name}\`, prijs: \`€${price}\``,
-      });
-      return;
-    }
+    interaction.reply(
+      `Het abonnement is toegevoegd voor ${
+        user.username
+      }, startdatum: ${startDate.toDateString()} prijs: ${price} herhaling: ${recurrence} beschrijving: ${description}`
+    );
+
+    return;
+
+    // if (userResult) {
+    //   const subscription: Subscription = new Subscription();
+    //   subscription.name = description;
+    //   subscription.price = price;
+    //   subscription.recurrence = recurrence;
+    //   subscription.user = userResult;
+    //   subscription.startDate = startDate;
+
+    //   await subscriptionRepository.save(subscription);
+
+    //   interaction.reply(`Het abonnement is toegevoegd voor ${user.username}.`);
+    //   return;
+    // }
 
     interaction.reply({
       content: "Er ging iets mis, aankoop niet geregistreerd",
