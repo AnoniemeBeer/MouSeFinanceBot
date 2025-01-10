@@ -35,6 +35,10 @@ jobs:
               id: get_version
               run: echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
 
+            - name: Convert repository owner to lowercase
+              id: lowercase_owner
+              run: echo "LOWERCASE_OWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
             - name: Build and push to dockerhub
               uses: docker/build-push-action@v5
               with:
@@ -46,4 +50,4 @@ jobs:
                   tags: |
                       ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:latest,
                       ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ env.VERSION }}
-                      ghcr.io/${{ github.repository_owner }}/mousefinancebot:${{ env.VERSION }}
+                      ghcr.io/${{ github.LOWERCASE_OWNER }}/mousefinancebot:${{ env.VERSION }}
