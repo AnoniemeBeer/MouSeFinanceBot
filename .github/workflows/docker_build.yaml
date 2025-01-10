@@ -39,7 +39,7 @@ jobs:
               with:
                   file: Dockerfile.node
                   push: true
-                  platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+                  platforms: linux/amd64
                   cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache
                   cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:cache,mode=max
                   tags: |
