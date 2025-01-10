@@ -50,4 +50,4 @@ jobs:
                   tags: |
                       ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:latest,
                       ${{ secrets.DOCKERHUB_USERNAME }}/mousefinancebot:${{ env.VERSION }}
-                      ghcr.io/${{ github.LOWERCASE_OWNER }}/mousefinancebot:${{ env.VERSION }}
+                      ghcr.io/${{ env.LOWERCASE_OWNER }}/mousefinancebot:${{ env.VERSION }}
