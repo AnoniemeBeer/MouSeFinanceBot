@@ -42,11 +42,12 @@ export default {
 
     callback: async (client: any, interaction: any) => {
         try {
-            const purchaseRepository = AppDataSource.getRepository(Purchase);
+            // Initialize the repositories
             const userRepository = AppDataSource.getRepository(User);
             const subscriptionRepository =
                 AppDataSource.getRepository(Subscription);
 
+            // Get the command options
             let user = interaction.options.getUser("persoon");
             const price = interaction.options.getNumber("prijs");
             const description = interaction.options.getString("beschrijving");
@@ -55,16 +56,17 @@ export default {
                 ? new Date(interaction.options.getString("start-datum"))
                 : new Date();
 
+            // Check if the user is null
             if (user == null) {
                 user = interaction.user;
             }
 
+            // Check if the user exists, if not, create it
+            // Otherwise, check if the user's name has changed
             let userResult: User | null = await userRepository.findOne({
                 where: { discordId: user.id },
             });
 
-            // Check if the user exists, if not, create it
-            // Otherwise, check if the user's name has changed
             if (userResult == null) {
                 const newUser = new User();
                 newUser.discordId = user.id;

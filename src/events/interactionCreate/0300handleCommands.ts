@@ -21,7 +21,7 @@ export default async (client: any, interaction: any) => {
         if (commandObject.devOnly) {
             if (!devs?.includes(interaction.member.id)) {
                 interaction.reply({
-                    content: "Alleen developers mogel dit commando gebruiken.",
+                    content: "Alleen developers mogen dit commando gebruiken.",
                     ephemeral: true,
                 });
                 return;

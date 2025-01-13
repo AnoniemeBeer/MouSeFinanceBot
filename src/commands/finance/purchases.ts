@@ -7,8 +7,8 @@ import chunkArray from "../../utils/chunkArray";
 export default {
     name: "aankopen",
     description: "Krijg alle aankopen van een persoon te zien",
-    devOnly: false,
-    testOnly: false,
+    devOnly: true,
+    testOnly: true,
     options: [
         {
             name: "persoon",
@@ -16,7 +16,6 @@ export default {
             type: ApplicationCommandOptionType.User,
         },
     ],
-    // deleted: Boolean,
 
     callback: async (client: any, interaction: any) => {
         // Initialize the repositories
