@@ -27,5 +27,5 @@ export default (client: any) => {
         client.user!.setActivity(statuses[random].name, {
             type: ActivityType.Watching,
         });
-    }, 1000 * 60 * 60);
+    }, 1000 * 60 * 10);
 };
