@@ -12,7 +12,19 @@ let statuses = [
         name: "Tlag aan den auto",
     },
     {
-        name: "Tlach ni aan mij",
+        name: "Tlag ni aan mij",
+    },
+    {
+        name: "Mijn zakgeld was op",
+    },
+    {
+        name: "Da mocht ni van die van ons",
+    },
+    {
+        name: "BLIJ?! Ik wou dat 't al weekend was",
+    },
+    {
+        name: "Efkes in 't rood is geen probleem he",
     },
 ];
 
