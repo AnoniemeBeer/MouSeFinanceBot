@@ -6,8 +6,8 @@ import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 export default {
     name: "totaal",
     description: "Krijg alle uitgaven van een persoon te zien",
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     options: [
         {
             name: "persoon",
