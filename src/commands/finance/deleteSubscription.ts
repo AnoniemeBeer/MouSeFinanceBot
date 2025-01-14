@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType } from "discord.js";
-import { User, Subscription } from "../../entity";
+import { User, Subscription, Purchase } from "../../entity";
 import { AppDataSource } from "../../data-source";
+import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 
 export default {
     name: "verwijder-abbonement",
@@ -22,6 +23,7 @@ export default {
         try {
             const subscriptionRepository =
                 AppDataSource.getRepository(Subscription);
+            const purchaseRepository = AppDataSource.getRepository(Purchase);
             const subscriptionId =
                 interaction.options.getNumber("abbonement_id");
 
@@ -38,6 +40,26 @@ export default {
                 return;
             }
 
+            if (interaction.user.id !== subscription.user.discordId) {
+                interaction.reply({
+                    content: "Je kan alleen je eigen abbonementen verwijderen",
+                    ephemeral: true,
+                });
+                return;
+            }
+
+            // Delete the subscription
+            const total = calculateSubscriptionTotal(
+                subscription.price,
+                subscription.recurrence,
+                subscription.startDate
+            );
+            const purchase = new Purchase();
+            purchase.user = subscription.user;
+            purchase.price = total;
+            purchase.description = `Verwijderd abbonement: ${subscription.name} (€${subscription.price} ${subscription.recurrence})`;
+
+            await purchaseRepository.save(purchase);
             await subscriptionRepository.delete(subscriptionId);
 
             interaction.reply({

@@ -7,6 +7,7 @@ import { User, Purchase, Subscription } from "../../entity";
 import { AppDataSource } from "../../data-source";
 import chunkArray from "../../utils/chunkArray";
 import pagination from "../../utils/pagination";
+import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 
 export default {
     name: "abbonementen",
@@ -70,12 +71,18 @@ export default {
                 let ids: string = ``;
                 let names: string = ``;
                 let prices: string = ``;
+                let totalSubscriptions: number = 0;
 
                 // Loop through all the purchases and add them to the fields
                 for (const item of userSubscriptions) {
                     ids += `${item.id}\n`;
                     names += `${item.name}\n`;
                     prices += `€${item.price}\n`;
+                    totalSubscriptions += calculateSubscriptionTotal(
+                        item.price,
+                        item.recurrence,
+                        item.startDate
+                    );
                 }
 
                 // Create the embed
@@ -92,7 +99,8 @@ export default {
                         value: names,
                         inline: true,
                     },
-                    { name: "Prijs", value: prices, inline: true }
+                    { name: "Prijs", value: prices, inline: true },
+                    { name: "Totale kosten", value: `${totalSubscriptions}` }
                 );
 
                 // Add the embed to the embeds array
