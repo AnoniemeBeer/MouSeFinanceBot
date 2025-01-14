@@ -5,8 +5,8 @@ import { AppDataSource } from "../../data-source";
 export default {
     name: "abbonement",
     description: "Registreer een abbonement",
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     options: [
         {
             name: "prijs",

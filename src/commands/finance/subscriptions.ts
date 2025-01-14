@@ -12,8 +12,8 @@ import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 export default {
     name: "abbonementen",
     description: "Bekijk alle abbonementen van een persoon",
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     options: [
         {
             name: "persoon",
