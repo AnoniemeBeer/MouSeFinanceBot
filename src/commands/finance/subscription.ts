@@ -3,14 +3,14 @@ import { User, Purchase, Subscription } from "../../entity";
 import { AppDataSource } from "../../data-source";
 
 export default {
-    name: "abbonement",
-    description: "Registreer een abbonement",
+    name: "abonnement",
+    description: "Registreer een abonnement",
     devOnly: false,
     testOnly: false,
     options: [
         {
             name: "prijs",
-            description: "De prijs van het abbonement",
+            description: "De prijs van het abonnement",
             type: ApplicationCommandOptionType.Number,
             required: true,
         },
@@ -24,7 +24,7 @@ export default {
         },
         {
             name: "beschrijving",
-            description: "Wat was de aankoop",
+            description: "Van was is het abonement?",
             type: ApplicationCommandOptionType.String,
             required: true,
         },

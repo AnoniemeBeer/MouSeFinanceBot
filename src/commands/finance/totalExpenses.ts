@@ -67,7 +67,7 @@ export default {
                 },
                 { name: "Totaal aankopen", value: `${totalPurchases}` },
                 {
-                    name: "Totaal abbonementen",
+                    name: "Totaal abonnementen",
                     value: `${totalSubscriptions}`,
                 }
             );

@@ -4,15 +4,15 @@ import { AppDataSource } from "../../data-source";
 import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 
 export default {
-    name: "verwijder-abbonement",
-    description: "Verwijder een abbonement",
+    name: "verwijder-abonnement",
+    description: "Verwijder een abonnement",
     devOnly: false,
     testOnly: false,
     options: [
         {
-            name: "abbonement_id",
+            name: "abonnement_id",
             description:
-                "Het id van de abbonement dat je wilt verwijderen, gebruik /abbonementen om de id's te zien",
+                "Het id van de abonnement dat je wilt verwijderen, gebruik /abonnementen om de id's te zien",
             type: ApplicationCommandOptionType.Number,
             required: true,
         },
@@ -25,7 +25,7 @@ export default {
                 AppDataSource.getRepository(Subscription);
             const purchaseRepository = AppDataSource.getRepository(Purchase);
             const subscriptionId =
-                interaction.options.getNumber("abbonement_id");
+                interaction.options.getNumber("abonnement_id");
 
             const subscription = await subscriptionRepository.findOne({
                 where: { id: subscriptionId },
@@ -34,7 +34,7 @@ export default {
 
             if (subscription == null) {
                 interaction.reply({
-                    content: "Dit abbonement bestaat niet",
+                    content: "Dit abonnement bestaat niet",
                     ephemeral: true,
                 });
                 return;
@@ -42,7 +42,7 @@ export default {
 
             if (interaction.user.id !== subscription.user.discordId) {
                 interaction.reply({
-                    content: "Je kan alleen je eigen abbonementen verwijderen",
+                    content: "Je kan alleen je eigen abonnementen verwijderen",
                     ephemeral: true,
                 });
                 return;
@@ -57,13 +57,13 @@ export default {
             const purchase = new Purchase();
             purchase.user = subscription.user;
             purchase.price = total;
-            purchase.description = `Verwijderd abbonement: ${subscription.name} (€${subscription.price} ${subscription.recurrence})`;
+            purchase.description = `Verwijderd abonnement: ${subscription.name} (€${subscription.price} ${subscription.recurrence})`;
 
             await purchaseRepository.save(purchase);
             await subscriptionRepository.delete(subscriptionId);
 
             interaction.reply({
-                content: `Het abbonement \`${subscription.name}\`(€${subscription.price} ${subscription.recurrence}) van \`${subscription.user.name}\` is verwijderd.`,
+                content: `Het abonnement \`${subscription.name}\`(€${subscription.price} ${subscription.recurrence}) van \`${subscription.user.name}\` is verwijderd.`,
             });
         } catch (error) {
             interaction.reply({

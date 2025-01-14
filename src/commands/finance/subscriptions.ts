@@ -10,8 +10,8 @@ import pagination from "../../utils/pagination";
 import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 
 export default {
-    name: "abbonementen",
-    description: "Bekijk alle abbonementen van een persoon",
+    name: "abonnementen",
+    description: "Bekijk alle abonnementen van een persoon",
     devOnly: false,
     testOnly: false,
     options: [
@@ -48,7 +48,7 @@ export default {
             if (user == null || user.subscriptions.length == 0) {
                 interaction.reply({
                     content:
-                        "Deze persoon heeft nog geen abbonementen geregistreerd",
+                        "Deze persoon heeft nog geen abonnementen geregistreerd",
                     ephemeral: true,
                 });
                 return;
@@ -78,6 +78,14 @@ export default {
                     ids += `${item.id}\n`;
                     names += `${item.name}\n`;
                     prices += `€${item.price}\n`;
+                    // console.log(
+                    //     item.name +
+                    //         calculateSubscriptionTotal(
+                    //             item.price,
+                    //             item.recurrence,
+                    //             item.startDate
+                    //         )
+                    // );
                     totalSubscriptions += calculateSubscriptionTotal(
                         item.price,
                         item.recurrence,
@@ -87,9 +95,9 @@ export default {
 
                 // Create the embed
                 const embed = new EmbedBuilder();
-                embed.setTitle("abbonementen");
+                embed.setTitle("abonnementen");
                 embed.setDescription(
-                    `Dit zijn de abbonementen van ${user.name}`
+                    `Dit zijn de abonnementen van ${user.name}`
                 );
                 embed.setColor("#53fc0b");
                 embed.addFields(
@@ -111,7 +119,7 @@ export default {
             await pagination(interaction, embeds);
         } catch (error) {
             interaction.reply({
-                content: "Er ging iets mis bij het ophalen van de abbonementen",
+                content: "Er ging iets mis bij het ophalen van de abonnementen",
                 ephemeral: true,
             });
             throw new Error("Error in subscriptions callback: " + error);
