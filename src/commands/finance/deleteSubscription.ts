@@ -41,7 +41,7 @@ export default {
             await subscriptionRepository.delete(subscriptionId);
 
             interaction.reply({
-                content: `De aankoop \`${subscription.name}\`(€${subscription.price}) van \`${subscription.user.name}\` is verwijderd.`,
+                content: `Het abbonement \`${subscription.name}\`(€${subscription.price} ${subscription.recurrence}) van \`${subscription.user.name}\` is verwijderd.`,
             });
         } catch (error) {
             interaction.reply({

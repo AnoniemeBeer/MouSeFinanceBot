@@ -1,6 +1,7 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { AppDataSource } from "../../data-source";
 import { User } from "../../entity";
+import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
 
 export default {
     name: "totaal",
@@ -41,16 +42,19 @@ export default {
                 0
             );
 
-            console.log("Total purchases:", totalPurchases); // Debugging
-
             const totalSubscriptions = user.subscriptions.reduce(
                 (acc: number, subscription: any) => {
-                    return acc + parseFloat(subscription.price);
+                    return (
+                        acc +
+                        calculateSubscriptionTotal(
+                            parseFloat(subscription.price),
+                            subscription.recurrence,
+                            subscription.startDate
+                        )
+                    );
                 },
                 0
             );
-
-            console.log("Total subscriptions:", totalSubscriptions); // Debugging
 
             const embed = new EmbedBuilder();
             embed.setTitle("Totaal uitgaven");
