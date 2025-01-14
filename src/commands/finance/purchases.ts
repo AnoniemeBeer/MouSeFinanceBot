@@ -7,8 +7,8 @@ import chunkArray from "../../utils/chunkArray";
 export default {
     name: "aankopen",
     description: "Krijg alle aankopen van een persoon te zien",
-    devOnly: true,
-    testOnly: true,
+    devOnly: false,
+    testOnly: false,
     options: [
         {
             name: "persoon",
@@ -47,10 +47,12 @@ export default {
         }
 
         // Calculate the total amount of money spent
-        let total: number = 0;
-        for (const item of user.purchases) {
-            total += item.price;
-        }
+        const total: number = user.purchases.reduce(
+            (acc: number, purchase: any) => {
+                return acc + parseFloat(purchase.price);
+            },
+            0
+        );
 
         // Split the purchases into chunks of 10
         const splitArray: Purchase[][] = chunkArray(user.purchases, 10);
