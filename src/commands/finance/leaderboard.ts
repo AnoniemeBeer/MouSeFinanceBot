@@ -43,6 +43,7 @@ export default {
         embed.setTitle('Leaderboard');
         embed.setDescription('Dit is het leaderboard van de server');
         embed.setColor('#53fc0b');
+        embed.setImage('https://media1.tenor.com/m/22a_zafg54EAAAAd/fcdk-xavier.gif');
         embed.setTimestamp();
         embed.setFooter({ text: 'Shame on you all' });
 
