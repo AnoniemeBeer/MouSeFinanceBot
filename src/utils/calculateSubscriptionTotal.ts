@@ -39,7 +39,6 @@ export default (
 
         case Recurrence.JAARLIJKS:
             let years: number = date.getFullYear() - startDate.getFullYear();
-            console.log(date.getMonth(), startDate.getMonth(), years);
 
             if (
                 !(
@@ -49,9 +48,7 @@ export default (
                 )
             ) {
                 if (date.getMonth() <= startDate.getMonth()) {
-                    console.log("months");
                     if (date.getDate() <= startDate.getDate()) {
-                        console.log("days");
                         years -= 1; // Subtract 1 if a full month hasn't passed
                     }
                 }

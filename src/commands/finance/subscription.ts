@@ -1,4 +1,4 @@
-import { Application, ApplicationCommandOptionType } from "discord.js";
+import { Application, ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { User, Purchase, Subscription } from "../../entity";
 import { AppDataSource } from "../../data-source";
 
@@ -10,32 +10,37 @@ export default {
     options: [
         {
             name: "prijs",
-            description: "De prijs van het abonnement",
+            description: "De prijs van het abonnement in euro's (bijvoorbeeld: 19.99)",
             type: ApplicationCommandOptionType.Number,
             required: true,
         },
         {
             name: "herhaling",
             description:
-                "Hoe vaak herhaalt het abonnement? (dagelijks, wekelijks, maandelijks, jaarlijks)",
-            options: ["dagelijks", "wekelijks", "maandelijks", "jaarlijks"],
+                "De frequentie van het abonnement. Kies uit: dagelijks, wekelijks, maandelijks of jaarlijks.",
+            choices: [
+                { name: "Dagelijks", value: "dagelijks" },
+                { name: "Wekelijks", value: "wekelijks" },
+                { name: "Maandelijks", value: "maandelijks" },
+                { name: "Jaarlijks", value: "jaarlijks" },
+            ],
             type: ApplicationCommandOptionType.String,
             required: true,
         },
         {
             name: "beschrijving",
-            description: "Van was is het abonement?",
+            description: "Een korte omschrijving van het abonnement (bijvoorbeeld: 'Netflix').",
             type: ApplicationCommandOptionType.String,
             required: true,
         },
         {
             name: "start-datum",
-            description: "De start datum van het abonnement (YYYY-MM-DD)",
+            description: "De begindatum van het abonnement in het formaat YYYY-MM-DD (bijvoorbeeld: 2025-01-01).",
             type: ApplicationCommandOptionType.String,
         },
         {
             name: "persoon",
-            description: "De persoon die de aankoop heeft gedaan",
+            description: "De gebruiker die verantwoordelijk is voor de aankoop van het abonnement.",
             type: ApplicationCommandOptionType.User,
         },
     ],
@@ -93,18 +98,30 @@ export default {
                 subscription.price = price;
                 subscription.recurrence = recurrence;
                 subscription.user = userResult;
-                subscription.startDate = `${startDate.getFullYear()}-${
-                    startDate.getMonth() + 1
-                }-${startDate.getDate()}`;
+                subscription.startDate = `${startDate.getFullYear()}-${startDate.getMonth() + 1
+                    }-${startDate.getDate()}`;
 
                 // Save the subscription
 
                 const result = await subscriptionRepository.save(subscription);
-                interaction.reply(
-                    `Het abonnement is toegevoegd voor \`${
-                        user.username
-                    }\`, startdatum: \`${startDate.toDateString()}\` prijs: \`${price}\` herhaling: \`${recurrence}\` beschrijving: \`${description}\``
-                );
+
+                const embed = new EmbedBuilder()
+                    .setColor("#53fc0b")
+                    .setTitle("Abonnement toegevoegd")
+                    .setDescription("Hier zijn de details van het nieuwe abonnement:")
+                    .addFields(
+                        { name: "Gebruiker", value: `\`${user.username}\``, inline: true },
+                        { name: "Startdatum", value: `\`${startDate.toDateString()}\``, inline: true },
+                        { name: "Prijs", value: `\`€ ${price}\``, inline: true },
+                        { name: "Herhaling", value: `\`${recurrence}\``, inline: true },
+                        { name: "Beschrijving", value: `\`${description}\`` }
+                    )
+                    .setTimestamp()
+                    .setFooter({
+                        text: "Abonnementen beheer",
+                    });
+
+                await interaction.reply({ embeds: [embed] });
 
                 return;
             }
