@@ -1,0 +1,22 @@
+name: mousefinancebot
+services:
+  node:
+    type: node:22
+    build:
+      - npm install # Install dependencies
+      - npm run build # Compile TypeScript to JavaScript
+  database:
+    type: mariadb
+    portforward: true
+    creds:
+      user: mariadb
+      password: mariadb
+      database: database
+  phpmyadmin:
+    type: phpmyadmin
+events:
+  post-start:
+    - node: npm run dev # Start the bot in development mode
+proxy:   
+  phpmyadmin:     
+    - phpmyadmin.mousefinancebot.lndo.site
