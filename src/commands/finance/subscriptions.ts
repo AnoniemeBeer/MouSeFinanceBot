@@ -8,6 +8,7 @@ import { AppDataSource } from "../../data-source";
 import chunkArray from "../../utils/chunkArray";
 import pagination from "../../utils/pagination";
 import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
+import { EMBED_COLOR } from "../../utils/constants";
 
 export default {
     name: "abonnementen",
@@ -88,15 +89,15 @@ export default {
 
                 // Create the embed
                 const embed = new EmbedBuilder()
+                    .setColor(EMBED_COLOR)
                     .setTitle("Abonnementen overzicht")
-                    .setDescription(`Hier is een overzicht van de abonnementen van **${user.name}**.`)
-                    .setColor("#53fc0b")
+                    .setDescription(`Hier vind je een overzicht van alle abonnementen van **${user.name}**:`)
                     .addFields(
-                        { name: "ID's", value: ids || "Geen", inline: true },
-                        { name: "Beschrijvingen", value: names || "Geen", inline: true },
-                        { name: "Prijzen", value: prices || "Geen", inline: true },
+                        { name: "ID", value: ids || "Geen", inline: true },
+                        { name: "Beschrijving", value: names || "Geen", inline: true },
+                        { name: "Prijs", value: prices || "Geen", inline: true },
                     )
-                    .addFields({ name: "Totale kosten", value: `€ ${totalSubscriptions}`, inline: false })
+                    .addFields({ name: "Totale kost", value: `€ ${totalSubscriptions}`, inline: false })
                     .setThumbnail(person.displayAvatarURL({ dynamic: true, size: 128 })) // Add user's avatar as a thumbnail
                     .setFooter({
                         text: "Abonnementen beheer",

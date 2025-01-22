@@ -1,6 +1,7 @@
 import { Application, ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { User, Purchase, Subscription } from "../../entity";
 import { AppDataSource } from "../../data-source";
+import { EMBED_COLOR } from "../../utils/constants";
 
 export default {
     name: "abonnement",
@@ -102,24 +103,23 @@ export default {
                     }-${startDate.getDate()}`;
 
                 // Save the subscription
-
                 const result = await subscriptionRepository.save(subscription);
 
+                // Create the embed
                 const embed = new EmbedBuilder()
-                    .setColor("#53fc0b")
+                    .setColor(EMBED_COLOR)
                     .setTitle("Abonnement toegevoegd")
-                    .setDescription("Hier zijn de details van het nieuwe abonnement:")
+                    .setDescription(`Hier vind je de details van het nieuwe abonnement van **${subscription.user.name}**:`)
                     .addFields(
-                        { name: "Gebruiker", value: `\`${user.username}\``, inline: true },
-                        { name: "Startdatum", value: `\`${startDate.toDateString()}\``, inline: true },
-                        { name: "Prijs", value: `\`€ ${price}\``, inline: true },
-                        { name: "Herhaling", value: `\`${recurrence}\``, inline: true },
-                        { name: "Beschrijving", value: `\`${description}\`` }
+                        { name: "Startdatum", value: startDate.toDateString(), inline: true },
+                        { name: "Prijs", value: '€ ' + price, inline: true },
+                        { name: "Herhaling", value: recurrence, inline: true },
+                        { name: "Beschrijving", value: description, inline: true },
                     )
-                    .setTimestamp()
                     .setFooter({
                         text: "Abonnementen beheer",
-                    });
+                    })
+                    .setTimestamp();
 
                 await interaction.reply({ embeds: [embed] });
 
