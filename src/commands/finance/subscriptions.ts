@@ -8,10 +8,11 @@ import { AppDataSource } from "../../data-source";
 import chunkArray from "../../utils/chunkArray";
 import pagination from "../../utils/pagination";
 import calculateSubscriptionTotal from "../../utils/calculateSubscriptionTotal";
+import { EMBED_COLOR } from "../../utils/constants";
 
 export default {
     name: "abonnementen",
-    description: "Bekijk alle abonnementen van een persoon",
+    description: "Bekijk alle abonnementen",
     devOnly: false,
     testOnly: false,
     options: [
@@ -19,6 +20,7 @@ export default {
             name: "persoon",
             description: "De persoon die de aankoop heeft gedaan",
             type: ApplicationCommandOptionType.User,
+            required: true,
         },
     ],
 
@@ -28,7 +30,7 @@ export default {
             const subscriptionRepository =
                 AppDataSource.getRepository(Subscription);
             const userRepository = AppDataSource.getRepository(User);
-            const person: User = interaction.options.getUser("persoon");
+            const person = interaction.options.getUser("persoon");
 
             // Get the user and their Subscriptions
             let user: any = null;
@@ -77,15 +79,7 @@ export default {
                 for (const item of userSubscriptions) {
                     ids += `${item.id}\n`;
                     names += `${item.name}\n`;
-                    prices += `€${item.price}\n`;
-                    // console.log(
-                    //     item.name +
-                    //         calculateSubscriptionTotal(
-                    //             item.price,
-                    //             item.recurrence,
-                    //             item.startDate
-                    //         )
-                    // );
+                    prices += `€ ${item.price}\n`;
                     totalSubscriptions += calculateSubscriptionTotal(
                         item.price,
                         item.recurrence,
@@ -94,22 +88,22 @@ export default {
                 }
 
                 // Create the embed
-                const embed = new EmbedBuilder();
-                embed.setTitle("abonnementen");
-                embed.setDescription(
-                    `Dit zijn de abonnementen van ${user.name}`
-                );
-                embed.setColor("#53fc0b");
-                embed.addFields(
-                    { name: "ID", value: ids, inline: true },
-                    {
-                        name: "Beschrijving",
-                        value: names,
-                        inline: true,
-                    },
-                    { name: "Prijs", value: prices, inline: true },
-                    { name: "Totale kosten", value: `${totalSubscriptions}` }
-                );
+                const embed = new EmbedBuilder()
+                    .setColor(EMBED_COLOR)
+                    .setTitle("Abonnementen overzicht")
+                    .setDescription(`Hier vind je een overzicht van alle abonnementen van **${user.name}**:`)
+                    .addFields(
+                        { name: "ID", value: ids || "Geen", inline: true },
+                        { name: "Beschrijving", value: names || "Geen", inline: true },
+                        { name: "Prijs", value: prices || "Geen", inline: true },
+                    )
+                    .addFields({ name: "Totale kost", value: `€ ${totalSubscriptions}`, inline: false })
+                    .setThumbnail(person.displayAvatarURL({ dynamic: true, size: 128 })) // Add user's avatar as a thumbnail
+                    .setFooter({
+                        text: "Abonnementen beheer",
+                    })
+                    .setTimestamp();
+
 
                 // Add the embed to the embeds array
                 embeds.push(embed);

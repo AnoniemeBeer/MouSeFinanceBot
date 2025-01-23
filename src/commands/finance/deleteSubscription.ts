@@ -12,7 +12,7 @@ export default {
         {
             name: "abonnement_id",
             description:
-                "Het id van de abonnement dat je wilt verwijderen, gebruik /abonnementen om de id's te zien",
+                "Het id van het abonnement dat je wilt verwijderen. Gebruik /abonnementen om de id's te bekijken.",
             type: ApplicationCommandOptionType.Number,
             required: true,
         },
@@ -34,7 +34,7 @@ export default {
 
             if (subscription == null) {
                 interaction.reply({
-                    content: "Dit abonnement bestaat niet",
+                    content: "Dit abonnement bestaat niet.",
                     ephemeral: true,
                 });
                 return;
@@ -42,7 +42,7 @@ export default {
 
             if (interaction.user.id !== subscription.user.discordId) {
                 interaction.reply({
-                    content: "Je kan alleen je eigen abonnementen verwijderen",
+                    content: "Je kan alleen je eigen abonnementen verwijderen.",
                     ephemeral: true,
                 });
                 return;
@@ -63,11 +63,11 @@ export default {
             await subscriptionRepository.delete(subscriptionId);
 
             interaction.reply({
-                content: `Het abonnement \`${subscription.name}\`(€${subscription.price} ${subscription.recurrence}) van \`${subscription.user.name}\` is verwijderd.`,
+                content: `🗑️ Het abonnement **${subscription.name}** (€${subscription.price}, ${subscription.recurrence}) van **${subscription.user.name}** is verwijderd.`,
             });
         } catch (error) {
             interaction.reply({
-                content: "Er is iets fout gegaan, probeer het later opnieuw",
+                content: "Er is iets fout gegaan, probeer het later opnieuw.",
                 ephemeral: true,
             });
             throw new Error("Error while deleting subscription: " + error);
