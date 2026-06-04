@@ -38,13 +38,21 @@ const connectDb = async () => {
             });
 
         // Wait 2 seconds before trying again
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        if (flag) {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
     }
 };
 
-connectDb();
+const start = async () => {
+    await connectDb();
 
-eventHandler(client);
+    eventHandler(client);
 
-// Login the client
-client.login(process.env.CLIENT_TOKEN);
+    // Login the client
+    await client.login(process.env.CLIENT_TOKEN);
+};
+
+start().catch((error) => {
+    console.log("Failed to start bot", error);
+});

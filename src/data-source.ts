@@ -1,6 +1,11 @@
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-import { User, Purchase, Subscription } from "./entity";
+import {
+  User,
+  Purchase,
+  Subscription,
+  MorningMessageSettings,
+} from "./entity";
 
 dotenv.config();
 
@@ -13,7 +18,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_SCHEMA || "database", // Add fallback for database name
   synchronize: true,
   logging: false,
-  entities: [User, Purchase, Subscription],
+  entities: [User, Purchase, Subscription, MorningMessageSettings],
   migrations: ["./migration/*.ts"],
   subscribers: [],
 });
