@@ -40,13 +40,28 @@ export default async (client: any, interaction: any) => {
         if (commandObject.permissionsRequired?.length) {
             for (const permission of commandObject.permissionsRequired) {
                 if (!interaction.member.permissions.has(permission)) {
-                    interaction.reply({
+                    await interaction.reply({
                         content:
                             "Je hebt niet de juiste permissies om dit commando te gebruiken.",
                         ephemeral: true,
                     });
-                    break;
+                    return;
                 }
+            }
+        }
+        if (commandObject.permissionsRequiredAny?.length) {
+            const hasAnyPermission = commandObject.permissionsRequiredAny.some(
+                (permission: bigint) =>
+                    interaction.member.permissions.has(permission)
+            );
+
+            if (!hasAnyPermission) {
+                await interaction.reply({
+                    content:
+                        "Je hebt niet de juiste permissies om dit commando te gebruiken.",
+                    ephemeral: true,
+                });
+                return;
             }
         }
         if (commandObject.botPermissions?.length) {
@@ -54,12 +69,12 @@ export default async (client: any, interaction: any) => {
                 const bot = interaction.guild.members.me;
 
                 if (!bot.permissions.has(permission)) {
-                    interaction.reply({
+                    await interaction.reply({
                         content:
                             "Ik heb niet de juiste permissies om dit commando te gebruiken.",
                         ephemeral: true,
                     });
-                    break;
+                    return;
                 }
             }
         }

@@ -15,7 +15,10 @@ export default {
   description: "Verstuur een ochtendbericht met vaste inhoud",
   devOnly: false,
   testOnly: false,
-  permissionsRequired: [PermissionsBitField.Flags.ManageGuild],
+  permissionsRequiredAny: [
+    PermissionsBitField.Flags.Administrator,
+    PermissionsBitField.Flags.ModerateMembers,
+  ],
   botPermissions: [
     PermissionsBitField.Flags.SendMessages,
     PermissionsBitField.Flags.EmbedLinks,
