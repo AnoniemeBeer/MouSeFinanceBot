@@ -1,127 +1,114 @@
 import {
-  ApplicationCommandOptionType,
-  ChannelType,
-  EmbedBuilder,
-  PermissionsBitField,
+    ApplicationCommandOptionType,
+    AttachmentBuilder,
+    ChannelType,
+    EmbedBuilder,
+    PermissionsBitField,
 } from "discord.js";
-import { AppDataSource } from "../../data-source";
-import { MorningEmbed } from "../../entity";
+import { get } from "https";
+import path from "path";
 
-const isValidImageUrl = (imageUrl: string) => {
-  try {
-    const url = new URL(imageUrl);
-    return ["http:", "https:"].includes(url.protocol);
-  } catch {
-    return false;
-  }
+type ZenQuote = {
+    q: string;
+    a: string;
 };
 
+const ZEN_QUOTES_TODAY_URL = "https://zenquotes.io/api/today";
+const MORNING_IMAGE_NAME = "tijgerinnetje.webp";
+
+const fetchDailyQuote = async (): Promise<ZenQuote | null> =>
+    new Promise((resolve) => {
+        get(ZEN_QUOTES_TODAY_URL, (response) => {
+            let body = "";
+
+            response.on("data", (chunk) => {
+                body += chunk;
+            });
+
+            response.on("end", () => {
+                try {
+                    const quotes = JSON.parse(body);
+                    const quote = Array.isArray(quotes) ? quotes[0] : null;
+
+                    if (quote?.q && quote?.a) {
+                        resolve({ q: quote.q, a: quote.a });
+                        return;
+                    }
+
+                    resolve(null);
+                } catch {
+                    resolve(null);
+                }
+            });
+        }).on("error", () => {
+            resolve(null);
+        });
+    });
+
 export default {
-  name: "ochtendbericht",
-  description: "Stel het dagelijkse ochtendbericht tussen 7u en 9u in",
-  devOnly: false,
-  testOnly: false,
-  permissionsRequired: [PermissionsBitField.Flags.ManageGuild],
-  botPermissions: [
-    PermissionsBitField.Flags.SendMessages,
-    PermissionsBitField.Flags.EmbedLinks,
-  ],
-  options: [
-    {
-      name: "kanaal",
-      description: "Het kanaal waar het ochtendbericht naartoe moet",
-      type: ApplicationCommandOptionType.Channel,
-      channel_types: [ChannelType.GuildText, ChannelType.GuildAnnouncement],
-      required: true,
+    name: "ochtendbericht",
+    description: "Verstuur een ochtendbericht met vaste inhoud",
+    devOnly: false,
+    testOnly: false,
+    permissionsRequired: [PermissionsBitField.Flags.ManageGuild],
+    botPermissions: [
+        PermissionsBitField.Flags.SendMessages,
+        PermissionsBitField.Flags.EmbedLinks,
+    ],
+    options: [
+        {
+            name: "kanaal",
+            description: "Het kanaal waar het ochtendbericht naartoe moet",
+            type: ApplicationCommandOptionType.Channel,
+            channel_types: [
+                ChannelType.GuildText,
+                ChannelType.GuildAnnouncement,
+            ],
+            required: true,
+        },
+    ],
+
+    callback: async (client: any, interaction: any) => {
+        if (!interaction.guildId) {
+            await interaction.reply({
+                content:
+                    "Dit commando kan alleen in een server gebruikt worden.",
+                ephemeral: true,
+            });
+            return;
+        }
+
+        await interaction.deferReply({ ephemeral: true });
+
+        const channel = interaction.options.getChannel("kanaal");
+        const dailyQuote = await fetchDailyQuote();
+        const image = new AttachmentBuilder(
+            path.join(
+                __dirname,
+                "..",
+                "..",
+                "..",
+                "assets",
+                MORNING_IMAGE_NAME,
+            ),
+        );
+
+        const previewEmbed = new EmbedBuilder()
+            .setTitle("tijgerinnetje")
+            .setDescription("Goeiemorgen")
+            .setColor("#53fc0b")
+            .setImage(`attachment://${MORNING_IMAGE_NAME}`);
+
+        if (dailyQuote) {
+            previewEmbed.setFooter({
+                text: `${dailyQuote.q} - ${dailyQuote.a}`,
+            });
+        }
+
+        await channel.send({ embeds: [previewEmbed], files: [image] });
+
+        await interaction.editReply({
+            content: `Het ochtendbericht is verzonden in ${channel}.`,
+        });
     },
-    {
-      name: "titel",
-      description: "De titel van de embed",
-      type: ApplicationCommandOptionType.String,
-      required: true,
-    },
-    {
-      name: "beschrijving",
-      description: "De beschrijving van de embed",
-      type: ApplicationCommandOptionType.String,
-      required: true,
-    },
-    {
-      name: "afbeelding",
-      description: "Optionele URL van de afbeelding in de embed",
-      type: ApplicationCommandOptionType.String,
-      required: false,
-    },
-    {
-      name: "ingeschakeld",
-      description: "Zet het dagelijkse ochtendbericht aan of uit",
-      type: ApplicationCommandOptionType.Boolean,
-      required: false,
-    },
-  ],
-
-  callback: async (client: any, interaction: any) => {
-    if (!interaction.guildId) {
-      interaction.reply({
-        content: "Dit commando kan alleen in een server gebruikt worden.",
-        ephemeral: true,
-      });
-      return;
-    }
-
-    const channel = interaction.options.getChannel("kanaal");
-    const title = interaction.options.getString("titel");
-    const description = interaction.options.getString("beschrijving");
-    const imageUrl = interaction.options.getString("afbeelding");
-    const enabled = interaction.options.getBoolean("ingeschakeld") ?? true;
-
-    if (imageUrl && !isValidImageUrl(imageUrl)) {
-      interaction.reply({
-        content: "Gebruik een geldige http(s)-URL voor de afbeelding.",
-        ephemeral: true,
-      });
-      return;
-    }
-
-    const morningEmbedRepository = AppDataSource.getRepository(MorningEmbed);
-    let morningEmbed = await morningEmbedRepository.findOne({
-      where: { guildId: interaction.guildId },
-    });
-
-    if (!morningEmbed) {
-      morningEmbed = new MorningEmbed();
-      morningEmbed.guildId = interaction.guildId;
-      morningEmbed.lastSentDate = null;
-    }
-
-    morningEmbed.channelId = channel.id;
-    morningEmbed.title = title;
-    morningEmbed.description = description;
-    morningEmbed.imageUrl = imageUrl;
-    morningEmbed.enabled = enabled;
-
-    await morningEmbedRepository.save(morningEmbed);
-
-    const previewEmbed = new EmbedBuilder()
-      .setTitle(title)
-      .setDescription(description)
-      .setColor("#FF0000");
-
-    previewEmbed.addFields(
-      { name: "Quote", value: "De quote van de dag uit ZenQuotes komt hier." },
-      { name: "Author", value: "De auteur komt hier." }
-    );
-
-    if (imageUrl) {
-      previewEmbed.setImage(imageUrl);
-    }
-
-    interaction.reply({
-      content: `Het ochtendbericht is opgeslagen en staat ${
-        enabled ? "aan" : "uit"
-      }. Het wordt elke ochtend willekeurig tussen 7u en 9u verzonden in ${channel}.`,
-      embeds: [previewEmbed],
-      ephemeral: true,
-    });
-  },
 };

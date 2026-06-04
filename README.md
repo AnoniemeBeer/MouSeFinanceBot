@@ -10,6 +10,4 @@ The app should now be running and, if your .env file is complete with correct se
 
 ## Morning embed message
 
-Use `/ochtendbericht` to configure one daily morning embed per Discord server. The command lets a server manager choose the target channel, title, description, optional image URL, and whether the message is enabled.
-
-The bot sends enabled morning embeds once per day at a random time between 07:00 and 09:00. Each message includes the ZenQuotes quote of the day from `https://zenquotes.io/api/today`, using `q` as the quote and `a` as the author. By default this window uses the `Europe/Brussels` time zone. Set `MORNING_EMBED_TIME_ZONE` in `.env` to another IANA time zone, for example `America/New_York`, if your server should use a different morning window.
+Use `/ochtendbericht` to send a fixed embed to a selected channel. The embed title is `tijgerinnetje`, the description is `Goeiemorgen`, and the footer contains the ZenQuotes quote of the day from `https://zenquotes.io/api/today`.
